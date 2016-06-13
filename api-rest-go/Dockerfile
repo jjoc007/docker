@@ -1,18 +1,17 @@
 FROM ubuntu
 MAINTAINER Juan José Orjuela <j.j.o.c007@gmail.com>
 
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
-
-RUN apt-get update && apt-get -y install golang git vim postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5
 RUN mkdir /var/go && mkdir /var/go/src && mkdir /var/backupDB
 
 ADD backupDB.backup /var/backupDB/
 
-RUN service postgresql start
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+
+RUN apt-get update && apt-get -y install golang git vim postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5
 
 USER postgres
 
-RUN    /etc/init.d/postgresql start && psql --command "ALTER USER postgres PASSWORD '123456';" &&  createdb OAS-API -h localhost -U postgres --port 5432
+RUN    /etc/init.d/postgresql start && psql --command "ALTER USER postgres PASSWORD '123456';" &&  createdb -O postgres OAS-API 
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
 
@@ -26,14 +25,15 @@ USER root
 
 ENV GOPATH /var/go
 
-RUN git clone https://github.com/jjoc007/API-Rest-Go.git /var/go
+RUN git clone https://github.com/jjoc007/API-Rest-Go.git /var/go/src
 
-RUN go get github.com/gin-gonic/gin
+RUN go get -u github.com/gin-gonic/gin
 RUN go get gopkg.in/gorp.v1
 RUN go get github.com/fvbock/endless
 RUN go get github.com/appleboy/gin-jwt
 RUN go get github.com/lib/pq
 
-RUN go run /var/go/src/main.go
 
 EXPOSE 8000
+
+CMD go run /var/go/src/main.go
