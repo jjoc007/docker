@@ -24,10 +24,6 @@ CMD ["/usr/lib/postgresql/9.5/bin/postgres", "-D", "/var/lib/postgresql/9.5/main
 
 USER root
 
-RUN su -c "psql" - postgres &&  alter user postgres password '123456'; && \q
-RUN createdb OAS-API -h localhost -U postgres --password 123456 --port 5432 && 123456
-RUN pg_restore -h localhost -p 5432 -U postgres -d OAS-API -W -v "/var/backupDB/backupDB.backup" && 123456
-
 ENV GOPATH /var/go
 
 RUN git clone https://github.com/jjoc007/API-Rest-Go.git /var/go
