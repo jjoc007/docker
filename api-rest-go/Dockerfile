@@ -1,12 +1,28 @@
 FROM ubuntu
 MAINTAINER Juan José Orjuela <j.j.o.c007@gmail.com>
 
-RUN apt-get update && apt-get -y install golang git vim postgresql postgresql-contrib
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+
+RUN apt-get update && apt-get -y install golang git vim postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5
 RUN mkdir /var/go && mkdir /var/go/src && mkdir /var/backupDB
 
 ADD backupDB.backup /var/backupDB/
 
 RUN service postgresql start
+
+USER postgres
+
+RUN    /etc/init.d/postgresql start && psql --command "ALTER USER postgres PASSWORD '123456';" &&  createdb OAS-API -h localhost -U postgres --port 5432
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.5/main/pg_hba.conf
+RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
+
+EXPOSE 5432
+
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+
+CMD ["/usr/lib/postgresql/9.5/bin/postgres", "-D", "/var/lib/postgresql/9.5/main", "-c", "config_file=/etc/postgresql/9.5/main/postgresql.conf"]
+
+USER root
 
 RUN su -c "psql" - postgres &&  alter user postgres password '123456'; && \q
 RUN createdb OAS-API -h localhost -U postgres --password 123456 --port 5432 && 123456
