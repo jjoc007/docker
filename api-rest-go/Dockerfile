@@ -5,8 +5,6 @@ RUN mkdir /var/go && mkdir /var/go/src && mkdir /var/backupDB
 
 ADD backupDB.backup /var/backupDB/
 
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
-
 RUN apt-get update && apt-get -y install golang git vim postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5
 
 USER postgres
