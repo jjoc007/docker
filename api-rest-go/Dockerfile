@@ -25,7 +25,7 @@ USER root
 
 ENV GOPATH /var/go
 
-RUN git clone https://github.com/jjoc007/API-Rest-Go.git /var/go/src
+RUN git clone https://github.com/udistrital/titan.git /var/go/src
 
 RUN go get -u github.com/gin-gonic/gin
 RUN go get gopkg.in/gorp.v1
