@@ -9,7 +9,7 @@ RUN apt-get update && apt-get -y install golang git vim postgresql-9.5 postgresq
 
 USER postgres
 
-RUN    /etc/init.d/postgresql start && psql --command "ALTER USER postgres PASSWORD '123456';" &&  createdb -O postgres OAS-API && psql OAS-API-R < gestion_parametros.sql
+RUN    /etc/init.d/postgresql start && psql --command "ALTER USER postgres PASSWORD '123456';" &&  createdb -O postgres OAS-API && psql OAS-API < gestion_parametros.sql
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
 
