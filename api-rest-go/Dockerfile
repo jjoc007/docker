@@ -3,13 +3,13 @@ MAINTAINER Juan José Orjuela <j.j.o.c007@gmail.com>
 
 RUN mkdir /var/go && mkdir /var/go/src && mkdir /var/backupDB
 
-ADD backupDB.backup /var/backupDB/
+ADD gestion_parametros.sql /var/backupDB/
 
 RUN apt-get update && apt-get -y install golang git vim postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5
 
 USER postgres
 
-RUN    /etc/init.d/postgresql start && psql --command "ALTER USER postgres PASSWORD '123456';" &&  createdb -O postgres OAS-API 
+RUN    /etc/init.d/postgresql start && psql --command "ALTER USER postgres PASSWORD '123456';" &&  createdb -O postgres OAS-API && psql OAS-API-R < gestion_parametros.sql
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
 
