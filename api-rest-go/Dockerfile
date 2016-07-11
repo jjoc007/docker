@@ -3,8 +3,6 @@ MAINTAINER Juan José Orjuela <j.j.o.c007@gmail.com>
 
 RUN mkdir /var/go && mkdir /var/go/src && mkdir /var/backupDB
 
-ADD gestion_parametros.sql /var/backupDB/
-
 RUN apt-get update && apt-get -y install golang git vim 
 
 USER root
@@ -12,8 +10,14 @@ USER root
 ENV GOPATH /var/go
 
 RUN git clone https://github.com/udistrital/titan.git /var/go/src
-RUN go get -u github.com/gin-gonic/gin && go get gopkg.in/gorp.v1 && go get github.com/fvbock/endless && go get github.com/appleboy/gin-jwt && go get github.com/lib/pq
+RUN go get github.com/astaxie/beego && go get github.com/beego/bee
+
+RUN export PATH=/var/go/bin:$PATH 
 
 EXPOSE 8000
 
-CMD go run /var/go/src/main.go
+RUN cd /var/go/src/
+
+CMD bee run -downdoc=true -gendoc=true
+
+
